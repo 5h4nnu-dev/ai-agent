@@ -1,0 +1,73 @@
+"""
+Test target model validation
+"""
+import pytest
+from src.pentest_agent.models.target import Target
+
+
+def test_target_creation():
+    """Test target model creation"""
+    target = Target(
+        url="https://example.com",
+        scheme="https",
+        host="example.com",
+        port=443,
+        scope={"allowed_domains": "example.com"}
+    )
+    assert target.url == "https://example.com"
+    assert target.scheme == "https"
+    assert target.host == "example.com"
+    assert target.port == 443
+
+
+def test_target_validation():
+    """Test target model validation"""
+    # This should work without validation errors
+    target = Target(
+        url="https://example.com",
+        scheme="https",
+        host="example.com",
+        port=443,
+        scope={"allowed_domains": "example.com"}
+    )
+    assert target is not None
+
+
+def test_target_invalid_url():
+    """Test target model with invalid URL"""
+    with pytest.raises(Exception):
+        Target(
+            url="not-a-valid-url",
+            scheme="https",
+            host="example.com",
+            port=443,
+            scope={"allowed_domains": "example.com"}
+        )
+
+
+def test_target_invalid_scheme():
+    """Test target model with invalid scheme"""
+    with pytest.raises(Exception):
+        Target(
+            url="https://example.com",
+            scheme="ftp",
+            host="example.com",
+            port=443,
+            scope={"allowed_domains": "example.com"}
+        )
+
+
+def test_target_invalid_port():
+    """Test target model with invalid port"""
+    with pytest.raises(Exception):
+        Target(
+            url="https://example.com",
+            scheme="https",
+            host="example.com",
+            port=70000,
+            scope={"allowed_domains": "example.com"}
+        )
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])
